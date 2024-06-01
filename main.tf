@@ -116,8 +116,9 @@ module "application_gateway" {
   appgw_routings                         = var.appgw_routings
   appgw_probes                           = var.appgw_probes
   appgw_backend_http_settings            = var.appgw_backend_http_settings
+  appgw_url_path_map                     = var.appgw_url_path_map
   subnet_id                              = var.subnet_id
-  user_assigned_identity_id              = var.create_user_managed_identity ? module.managed_identity[0].id : null
+  user_assigned_identity_id              = var.create_user_managed_identity ? module.managed_identity[0].id : var.user_assigned_identity_id
   appgw_private                          = var.appgw_private
   appgw_private_ip                       = var.private_ip_address
   enable_http2                           = var.enable_http2

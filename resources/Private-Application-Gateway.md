@@ -29,7 +29,11 @@ A-record in our custom Private DNS zone and assign it to the Application Gateway
 This will enable the users to refer to the Application Gateway instance using the custom DNS name.
 
 ```hcl
-
+custom_private_dns_record = {
+  name                  = "apgw"
+  private_dns_zone_name = "<private-dns-zone-name>"
+  private_dns_zone_rg   = "<private-dns-zone-rg>"
+}
 ```
 
 ## TLS Termination
@@ -50,7 +54,7 @@ Application Gateway can refer to the certificates required to establish the TLS 
 - While using `terraform`, it only supports certificates stored in the Key Vault as `secrets` and not as `certificates`.
 - While using the `portal`, The keyvault using RBAC permission model is not supported. The keyvault must be using the `access policy` permission model.
 
-F
+Following steps must be followed to refer to the certificates stored in the Key Vault:
 - A user assigned managed identity must be created and assigned to the Application Gateway instance.
 - The above MSI must be assigned role to read the secrets from the Key Vault. This requires the `Key Vault` to enable RBAC.
 - The certificate must be in the `.pfx` format and must not have a password.

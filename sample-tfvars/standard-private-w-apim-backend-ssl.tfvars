@@ -275,16 +275,7 @@ EOD
 }
 
 variable "appgw_routings" {
-  description = <<EOT
-    List of objects with request routing rules configurations. With AzureRM v3+ provider, `priority` attribute becomes mandatory.
-    Each Routing rule is associated with a particular listener and determines how traffic are routed to the backend pool.
-    Multiple routing rules cannot be associated with the same listener.
-
-    rule_type="PathBasedRouting" can be used to route traffic to multiple backends based on the URL path, else rule_type="Basic" is used.
-
-    `url_path_map_name` is required when rule_type="PathBasedRouting" and is used to define the URL path map configuration.
-  EOT
-
+  description = "List of objects with request routing rules configurations. With AzureRM v3+ provider, `priority` attribute becomes mandatory."
   type = list(object({
     name                        = string
     rule_type                   = optional(string, "Basic")
@@ -299,16 +290,7 @@ variable "appgw_routings" {
 }
 
 variable "appgw_probes" {
-  description = <<EOT
-    List of objects with probes configurations.
-    Probes are used to determine the health of the backend servers.
-    User needs to define custom probes only when the default probe is not sufficient, for example when the backend server
-    uses a different port or path or protocol.
-
-    Additional checks can be added to the default probe by setting the `match` attribute to compare the return status code
-    or the response body
-
-  EOT
+  description = "List of objects with probes configurations."
   type = list(object({
     name     = string
     host     = optional(string)
@@ -331,10 +313,7 @@ variable "appgw_probes" {
 }
 
 variable "appgw_backend_http_settings" {
-  description = <<EOT
-    List of objects including backend http settings configurations.
-    Each backend pool must be associated with a backend http settings configuration.
-  EOT
+  description = "List of objects including backend http settings configurations."
   type = list(object({
     name     = string
     port     = optional(number, 443)
@@ -356,12 +335,7 @@ variable "appgw_backend_http_settings" {
 }
 
 variable "appgw_url_path_map" {
-  description = <<EOT
-    List of objects with URL path map configurations.
-    This is mandatory when the routing rule_type is set to "PathBasedRouting". Path mapping must be specified to
-    route traffic to multiple backends based on the URL path.
-
-  EOT
+  description = "List of objects with URL path map configurations."
   type = list(object({
     name = string
 
@@ -447,19 +421,19 @@ variable "force_firewall_policy_association" {
 
 variable "waf_configuration" {
   description = <<EOD
-    WAF configuration object (only available with WAF_v2 SKU) with following attributes:
-    ```
-    - enabled:                  Boolean to enable WAF.
-    - file_upload_limit_mb:     The File Upload Limit in MB. Accepted values are in the range 1MB to 500MB.
-    - firewall_mode:            The Web Application Firewall Mode. Possible values are Detection and Prevention.
-    - max_request_body_size_kb: The Maximum Request Body Size in KB. Accepted values are in the range 1KB to 128KB.
-    - request_body_check:       Is Request Body Inspection enabled ?
-    - rule_set_type:            The Type of the Rule Set used for this Web Application Firewall.
-    - rule_set_version:         The Version of the Rule Set used for this Web Application Firewall. Possible values are 2.2.9, 3.0, and 3.1.
-    - disabled_rule_group:      The rule group where specific rules should be disabled. Accepted values can be found here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway#rule_group_name
-    - exclusion:                WAF exclusion rules to exclude header, cookie or GET argument. More informations on: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway#match_variable
-    ```
-  EOD
+WAF configuration object (only available with WAF_v2 SKU) with following attributes:
+```
+- enabled:                  Boolean to enable WAF.
+- file_upload_limit_mb:     The File Upload Limit in MB. Accepted values are in the range 1MB to 500MB.
+- firewall_mode:            The Web Application Firewall Mode. Possible values are Detection and Prevention.
+- max_request_body_size_kb: The Maximum Request Body Size in KB. Accepted values are in the range 1KB to 128KB.
+- request_body_check:       Is Request Body Inspection enabled ?
+- rule_set_type:            The Type of the Rule Set used for this Web Application Firewall.
+- rule_set_version:         The Version of the Rule Set used for this Web Application Firewall. Possible values are 2.2.9, 3.0, and 3.1.
+- disabled_rule_group:      The rule group where specific rules should be disabled. Accepted values can be found here: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway#rule_group_name
+- exclusion:                WAF exclusion rules to exclude header, cookie or GET argument. More informations on: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway#match_variable
+```
+EOD
   type = object({
     enabled                  = optional(bool, true)
     file_upload_limit_mb     = optional(number, 100)
@@ -490,9 +464,10 @@ variable "disable_waf_rules_for_dev_portal" {
 ### NETWORKING
 
 variable "subnet_id" {
-  description = "Subnet ID for attaching the Application Gateway. This is mandatory for v2 SKUs"
+  description = "Custom subnet ID for attaching the Application Gateway. Used only when the variable `create_subnet = false`."
   type        = string
   nullable    = false
+  default     = ""
 }
 
 variable "private_ip_address" {
@@ -504,15 +479,9 @@ variable "private_ip_address" {
 ### IDENTITY
 
 variable "user_assigned_identity_id" {
-  description = "User assigned identity id assigned to this resource. User can choose to pass in an existing identity or create a new one with create_user_managed_identity."
+  description = "User assigned identity id assigned to this resource."
   type        = string
   default     = null
-}
-
-variable "create_user_managed_identity" {
-  description = "Creates an user assigned managed Identity and assigns it to the Application Gateway. If this is true, user_assigned_identity_id will be ignored."
-  type        = bool
-  default     = true
 }
 
 ### APPGW PRIVATE
@@ -546,6 +515,12 @@ variable "autoscaling_parameters" {
   default = null
 }
 
+variable "create_user_managed_identity" {
+  description = "Creates an user assigned managed Identity and assigns it to the Application Gateway"
+  type        = bool
+  default     = true
+}
+
 variable "role_assignments" {
   description = <<EOT
     A map of role assignments to be associated with the user assigned managed identity of the Application Gateway
@@ -562,10 +537,7 @@ variable "role_assignments" {
 # Custom private DNS name
 
 variable "custom_private_dns_record" {
-  description = <<EOT
-    Custom private DNS record for the Application Gateway. An A-record would be created for the private IP address.
-    Valid `private_dns_zone_name` and `private_dns_zone_rg` must be provided. `name` must be only the sub-domain without the zone name.
-  EOT
+  description = "Custom private DNS record for the Application Gateway. An A-record would be created for the private IP address"
   type = object({
     name                  = string
     ttl                   = optional(number, 300)
