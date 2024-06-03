@@ -89,24 +89,21 @@ variable "resource_names_map" {
 variable "frontend_ip_configuration_name" {
   description = "Name of the frontend IP configuration."
   type        = string
+  default     = "standard-public-ip"
 }
 
-variable "public_ip_address_id" {
-  description = "ID of the public IP address to use for the frontend IP configuration."
-  type        = string
-  default     = null
-}
 
 variable "frontend_private_ip_configuration_name" {
-  description = "Name of the frontend private IP configuration."
+  description = "Name of the frontend private IP configuration. Mandatory when appgw_private is set to true."
   type        = string
-  default     = null
+  default     = "standard-private-ip"
 }
 # Application gateway inputs
 
 variable "gateway_ip_configuration_name" {
   description = "Name of the gateway IP configuration."
   type        = string
+  default     = "app-gateway-ip"
 }
 
 variable "sku_capacity" {
@@ -521,12 +518,6 @@ variable "appgw_private" {
   description = "Boolean variable to create a private Application Gateway. When `true`, the default http listener will listen on private IP instead of the public IP."
   type        = bool
   default     = false
-}
-
-variable "appgw_private_ip" {
-  description = "Private IP for Application Gateway. Used when variable `appgw_private` is set to `true`."
-  type        = string
-  default     = null
 }
 
 variable "enable_http2" {

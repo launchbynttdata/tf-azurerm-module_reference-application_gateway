@@ -107,6 +107,15 @@ module "application_gateway" {
   gateway_ip_configuration_name          = var.gateway_ip_configuration_name
   sku                                    = var.sku
   sku_capacity                           = var.sku_capacity
+  ssl_policy                             = var.ssl_policy
+  ssl_profile                            = var.ssl_profile
+  firewall_policy_id                     = var.firewall_policy_id
+  custom_error_configuration             = var.custom_error_configuration
+  appgw_redirect_configuration           = var.appgw_redirect_configuration
+  appgw_rewrite_rule_set                 = var.appgw_rewrite_rule_set
+  force_firewall_policy_association      = var.force_firewall_policy_association
+  waf_configuration                      = var.waf_configuration
+  disable_waf_rules_for_dev_portal       = var.disable_waf_rules_for_dev_portal
   zones                                  = var.zones
   frontend_port_settings                 = var.frontend_port_settings
   trusted_client_certificates_configs    = var.trusted_client_certificates_configs
