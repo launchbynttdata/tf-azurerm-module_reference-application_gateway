@@ -96,7 +96,7 @@ module "private_dns_record" {
 }
 
 module "application_gateway" {
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-application_gateway.git?ref=feature/init"
+  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-application_gateway.git?ref=1.0.0"
 
   name                                   = module.resource_names["app_gateway"].standard
   location                               = var.region

@@ -140,7 +140,7 @@ No providers.
 | <a name="module_managed_identity"></a> [managed\_identity](#module\_managed\_identity) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-user_managed_identity.git | 1.0.0 |
 | <a name="module_identity_roles"></a> [identity\_roles](#module\_identity\_roles) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-role_assignment.git | 1.0.0 |
 | <a name="module_private_dns_record"></a> [private\_dns\_record](#module\_private\_dns\_record) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-private_dns_records.git | 1.0.0 |
-| <a name="module_application_gateway"></a> [application\_gateway](#module\_application\_gateway) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-application_gateway.git | feature/init |
+| <a name="module_application_gateway"></a> [application\_gateway](#module\_application\_gateway) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-application_gateway.git | 1.0.0 |
 
 ## Resources
 
