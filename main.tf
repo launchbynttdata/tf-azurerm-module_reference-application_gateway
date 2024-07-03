@@ -11,7 +11,8 @@
 // limitations under the License.
 
 module "resource_names" {
-  source = "git::https://github.com/launchbynttdata/tf-launch-module_library-resource_name.git?ref=1.0.1"
+  source  = "terraform.registry.launch.nttdata.com/module_library/resource_name/launch"
+  version = "~> 1.0"
 
   for_each = var.resource_names_map
 
@@ -28,7 +29,8 @@ module "resource_names" {
 }
 
 module "resource_group" {
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-resource_group.git?ref=1.0.0"
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm"
+  version = "~> 1.0"
 
   location = var.region
   name     = module.resource_names["resource_group"].standard
@@ -37,7 +39,8 @@ module "resource_group" {
 }
 
 module "public_ip" {
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-public_ip?ref=1.0.0"
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm"
+  version = "~> 1.0"
 
   name                = module.resource_names["public_ip"].standard
   resource_group_name = module.resource_group.name
@@ -56,7 +59,8 @@ module "public_ip" {
 }
 
 module "managed_identity" {
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-user_managed_identity.git?ref=1.0.0"
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/user_managed_identity/azurerm"
+  version = "~> 1.0"
 
   count = var.create_user_managed_identity ? 1 : 0
 
@@ -68,7 +72,8 @@ module "managed_identity" {
 }
 
 module "identity_roles" {
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-role_assignment.git?ref=1.0.0"
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm"
+  version = "~> 1.0"
 
   for_each = var.create_user_managed_identity ? var.role_assignments : {}
 
@@ -80,7 +85,8 @@ module "identity_roles" {
 }
 
 module "private_dns_record" {
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-private_dns_records.git?ref=1.0.0"
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/private_dns_records/azurerm"
+  version = "~> 1.0"
 
   count = var.appgw_private && var.custom_private_dns_record != null ? 1 : 0
 
@@ -96,7 +102,8 @@ module "private_dns_record" {
 }
 
 module "application_gateway" {
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-application_gateway.git?ref=1.0.0"
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/application_gateway/azurerm"
+  version = "~> 1.0"
 
   name                                   = module.resource_names["app_gateway"].standard
   location                               = var.region

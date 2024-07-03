@@ -134,13 +134,13 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | git::https://github.com/launchbynttdata/tf-launch-module_library-resource_name.git | 1.0.1 |
-| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-resource_group.git | 1.0.0 |
-| <a name="module_public_ip"></a> [public\_ip](#module\_public\_ip) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-public_ip | 1.0.0 |
-| <a name="module_managed_identity"></a> [managed\_identity](#module\_managed\_identity) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-user_managed_identity.git | 1.0.0 |
-| <a name="module_identity_roles"></a> [identity\_roles](#module\_identity\_roles) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-role_assignment.git | 1.0.0 |
-| <a name="module_private_dns_record"></a> [private\_dns\_record](#module\_private\_dns\_record) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-private_dns_records.git | 1.0.0 |
-| <a name="module_application_gateway"></a> [application\_gateway](#module\_application\_gateway) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-application_gateway.git | 1.0.0 |
+| <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 1.0 |
+| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
+| <a name="module_public_ip"></a> [public\_ip](#module\_public\_ip) | terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm | ~> 1.0 |
+| <a name="module_managed_identity"></a> [managed\_identity](#module\_managed\_identity) | terraform.registry.launch.nttdata.com/module_primitive/user_managed_identity/azurerm | ~> 1.0 |
+| <a name="module_identity_roles"></a> [identity\_roles](#module\_identity\_roles) | terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm | ~> 1.0 |
+| <a name="module_private_dns_record"></a> [private\_dns\_record](#module\_private\_dns\_record) | terraform.registry.launch.nttdata.com/module_primitive/private_dns_records/azurerm | ~> 1.0 |
+| <a name="module_application_gateway"></a> [application\_gateway](#module\_application\_gateway) | terraform.registry.launch.nttdata.com/module_primitive/application_gateway/azurerm | ~> 1.0 |
 
 ## Resources
 
