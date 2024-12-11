@@ -34,14 +34,14 @@ module "resource_names_v2" {
 
   for_each = local.use_v2_resource_names ? var.resource_names_map : {}
 
-  region                  = join("", split("-", var.location))
-  class_env               = coalesce(var.class_env, var.environment)
+  region                  = join("", split("-", var.region))
+  class_env               = var.environment
   cloud_resource_type     = each.value.name
-  instance_env            = coalesce(var.instance_env, var.environment_number)
-  instance_resource       = coalesce(var.instance_resource, var.resource_number)
+  instance_env            = var.environment_number
+  instance_resource       = var.resource_number
   maximum_length          = each.value.max_length
-  logical_product_family  = var.logical_product_family
-  logical_product_service = var.logical_product_service
+  logical_product_family  = var.product_family
+  logical_product_service = var.product_service
   use_azure_region_abbr   = true
 }
 
