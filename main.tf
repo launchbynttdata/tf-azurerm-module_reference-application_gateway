@@ -59,17 +59,17 @@ module "public_ip" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm"
   version = "~> 1.0"
 
-  name                = local.public_ip
+  name                = local.public_ip_name
   resource_group_name = module.resource_group.name
   location            = var.region
   allocation_method   = "Static"
-  domain_name_label   = local.public_ip
+  domain_name_label   = local.public_ip_name
   sku                 = "Standard"
   sku_tier            = "Regional"
   zones               = var.zones
 
   tags = merge(var.tags, {
-    resource_name = local.public_ip
+    resource_name = local.public_ip_name
   })
 
   depends_on = [module.resource_group]
