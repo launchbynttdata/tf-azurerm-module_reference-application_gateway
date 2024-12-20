@@ -50,26 +50,26 @@ module "resource_group" {
   version = "~> 1.0"
 
   location = var.region
-  name     = module.resource_names["resource_group"].standard
+  name     = local.resource_group_name
 
-  tags = merge(var.tags, { resource_name = module.resource_names["resource_group"].standard })
+  tags = merge(var.tags, { resource_name = local.resource_group_name })
 }
 
 module "public_ip" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm"
   version = "~> 1.0"
 
-  name                = module.resource_names["public_ip"].standard
+  name                = local.public_ip
   resource_group_name = module.resource_group.name
   location            = var.region
   allocation_method   = "Static"
-  domain_name_label   = module.resource_names["public_ip"].standard
+  domain_name_label   = local.public_ip
   sku                 = "Standard"
   sku_tier            = "Regional"
   zones               = var.zones
 
   tags = merge(var.tags, {
-    resource_name = module.resource_names["public_ip"].standard
+    resource_name = local.public_ip
   })
 
   depends_on = [module.resource_group]
@@ -83,7 +83,7 @@ module "managed_identity" {
 
   resource_group_name         = module.resource_group.name
   location                    = var.region
-  user_assigned_identity_name = module.resource_names["msi"].standard
+  user_assigned_identity_name = local.identity_name
 
   depends_on = [module.resource_group]
 }
@@ -122,7 +122,7 @@ module "application_gateway" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/application_gateway/azurerm"
   version = "~> 1.0"
 
-  name                                   = module.resource_names["app_gateway"].standard
+  name                                   = local.gateway_name
   location                               = var.region
   resource_group_name                    = module.resource_group.name
   frontend_ip_configuration_name         = var.frontend_ip_configuration_name
@@ -160,7 +160,7 @@ module "application_gateway" {
   authentication_certificates_configs    = var.authentication_certificates_configs
 
   tags = merge(var.tags, {
-    resource_name = module.resource_names["app_gateway"].standard
+    resource_name = local.gateway_name
   })
 
   depends_on = [module.resource_group, module.public_ip, module.managed_identity, module.identity_roles]
