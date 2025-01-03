@@ -28,31 +28,48 @@ module "resource_names" {
 
 }
 
+module "resource_names_v2" {
+  source  = "terraform.registry.launch.nttdata.com/module_library/resource_name/launch"
+  version = "~> 2.0"
+
+  for_each = local.use_v2_resource_names ? var.resource_names_map : {}
+
+  region                  = join("", split("-", var.region))
+  class_env               = var.environment
+  cloud_resource_type     = each.value.name
+  instance_env            = var.environment_number
+  instance_resource       = var.resource_number
+  maximum_length          = each.value.max_length
+  logical_product_family  = var.product_family
+  logical_product_service = var.product_service
+  use_azure_region_abbr   = true
+}
+
 module "resource_group" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm"
   version = "~> 1.0"
 
   location = var.region
-  name     = module.resource_names["resource_group"].standard
+  name     = local.resource_group_name
 
-  tags = merge(var.tags, { resource_name = module.resource_names["resource_group"].standard })
+  tags = merge(var.tags, { resource_name = local.resource_group_name })
 }
 
 module "public_ip" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm"
   version = "~> 1.0"
 
-  name                = module.resource_names["public_ip"].standard
+  name                = local.public_ip_name
   resource_group_name = module.resource_group.name
   location            = var.region
   allocation_method   = "Static"
-  domain_name_label   = module.resource_names["public_ip"].standard
+  domain_name_label   = local.public_ip_name
   sku                 = "Standard"
   sku_tier            = "Regional"
   zones               = var.zones
 
   tags = merge(var.tags, {
-    resource_name = module.resource_names["public_ip"].standard
+    resource_name = local.public_ip_name
   })
 
   depends_on = [module.resource_group]
@@ -66,7 +83,7 @@ module "managed_identity" {
 
   resource_group_name         = module.resource_group.name
   location                    = var.region
-  user_assigned_identity_name = module.resource_names["msi"].standard
+  user_assigned_identity_name = local.identity_name
 
   depends_on = [module.resource_group]
 }
@@ -105,7 +122,7 @@ module "application_gateway" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/application_gateway/azurerm"
   version = "~> 1.0"
 
-  name                                   = module.resource_names["app_gateway"].standard
+  name                                   = local.gateway_name
   location                               = var.region
   resource_group_name                    = module.resource_group.name
   frontend_ip_configuration_name         = var.frontend_ip_configuration_name
@@ -143,7 +160,7 @@ module "application_gateway" {
   authentication_certificates_configs    = var.authentication_certificates_configs
 
   tags = merge(var.tags, {
-    resource_name = module.resource_names["app_gateway"].standard
+    resource_name = local.gateway_name
   })
 
   depends_on = [module.resource_group, module.public_ip, module.managed_identity, module.identity_roles]
