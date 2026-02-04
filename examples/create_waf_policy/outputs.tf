@@ -21,8 +21,8 @@ output "name" {
 }
 
 output "resource_group_name" {
-  description = "The name of the resource group"
-  value       = module.resource_group.name
+  value       = module.application_gateway.resource_group_name
+  description = "The name of the application gateway resource group"
 }
 
 output "frontend_ip_configuration" {
@@ -42,10 +42,10 @@ output "backend_address_pool" {
 
 output "waf_policy_id" {
   description = "The ID of the WAF policy"
-  value       = try(module.waf_policy[0].id, null)
+  value       = module.application_gateway.waf_policy_id
 }
 
 output "waf_policy_name" {
   description = "The name of the WAF policy"
-  value       = try(module.waf_policy[0].name, null)
+  value       = module.application_gateway.waf_policy_name
 }

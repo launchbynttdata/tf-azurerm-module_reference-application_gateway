@@ -85,6 +85,10 @@ variable "resource_names_map" {
       name       = "waf"
       max_length = 60
     }
+    virtual_network = {
+      name       = "vnet"
+      max_length = 60
+    }
   }
 }
 
@@ -587,20 +591,6 @@ variable "waf_policy_managed_rules" {
       }
     ]
   }
-}
-
-### NETWORKING
-
-variable "subnet_id" {
-  description = "Subnet ID for attaching the Application Gateway. This is mandatory for v2 SKUs"
-  type        = string
-  nullable    = false
-}
-
-variable "private_ip_address" {
-  type        = string
-  description = "The private IP address of the Application Gateway. Must be within the range of the subnet. Required only when appgw_private is set to true."
-  default     = ""
 }
 
 ### IDENTITY
