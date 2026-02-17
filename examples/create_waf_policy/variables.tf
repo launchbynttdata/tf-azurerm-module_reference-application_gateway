@@ -25,7 +25,7 @@ variable "product_service" {
     For example, backend, frontend, middleware etc.
   EOF
   type        = string
-  default     = "app"
+  default     = "appgw"
 }
 
 variable "environment" {
