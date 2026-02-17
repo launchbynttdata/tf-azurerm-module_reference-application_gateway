@@ -141,7 +141,7 @@ No providers.
 | <a name="module_managed_identity"></a> [managed\_identity](#module\_managed\_identity) | terraform.registry.launch.nttdata.com/module_primitive/user_managed_identity/azurerm | ~> 1.0 |
 | <a name="module_identity_roles"></a> [identity\_roles](#module\_identity\_roles) | terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm | ~> 1.0 |
 | <a name="module_private_dns_record"></a> [private\_dns\_record](#module\_private\_dns\_record) | terraform.registry.launch.nttdata.com/module_primitive/private_dns_records/azurerm | ~> 1.0 |
-| <a name="module_waf_policy"></a> [waf\_policy](#module\_waf\_policy) | git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-web_application_firewall_policy.git | feature!/initial-impl |
+| <a name="module_waf_policy"></a> [waf\_policy](#module\_waf\_policy) | terraform.registry.launch.nttdata.com/module_primitive/web_application_firewall_policy/azurerm | ~> 1.0 |
 | <a name="module_application_gateway"></a> [application\_gateway](#module\_application\_gateway) | terraform.registry.launch.nttdata.com/module_primitive/application_gateway/azurerm | ~> 1.0 |
 
 ## Resources

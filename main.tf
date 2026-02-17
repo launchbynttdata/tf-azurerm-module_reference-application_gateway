@@ -119,10 +119,8 @@ module "private_dns_record" {
 }
 
 module "waf_policy" {
-  # source = "terraform.registry.launch.nttdata.com/module_primitive/web_application_firewall_policy/azurerm"
-  # version = "~> 1.0"
-
-  source = "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-web_application_firewall_policy.git?ref=feature!/initial-impl"
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/web_application_firewall_policy/azurerm"
+  version = "~> 1.0"
 
   count = var.create_waf_policy ? 1 : 0
 
