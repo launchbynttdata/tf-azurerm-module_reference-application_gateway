@@ -118,6 +118,25 @@ module "private_dns_record" {
   }
 }
 
+module "waf_policy" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/web_application_firewall_policy/azurerm"
+  version = "~> 1.0"
+
+  count = var.create_waf_policy ? 1 : 0
+
+  name                = local.waf_policy_name
+  resource_group_name = module.resource_group.name
+  location            = var.region
+
+  custom_rules    = var.waf_policy_custom_rules
+  managed_rules   = var.waf_policy_managed_rules
+  policy_settings = var.waf_policy_settings
+
+  tags = merge(var.tags, { resource_name = local.waf_policy_name })
+
+  depends_on = [module.resource_group]
+}
+
 module "application_gateway" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/application_gateway/azurerm"
   version = "~> 1.0"
@@ -133,7 +152,7 @@ module "application_gateway" {
   sku_capacity                           = var.sku_capacity
   ssl_policy                             = var.ssl_policy
   ssl_profile                            = var.ssl_profile
-  firewall_policy_id                     = var.firewall_policy_id
+  firewall_policy_id                     = coalesce(var.firewall_policy_id, try(module.waf_policy[0].id, null))
   custom_error_configuration             = var.custom_error_configuration
   appgw_redirect_configuration           = var.appgw_redirect_configuration
   appgw_rewrite_rule_set                 = var.appgw_rewrite_rule_set

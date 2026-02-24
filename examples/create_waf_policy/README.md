@@ -1,123 +1,7 @@
-# tf-azurerm-module_reference-application_gateway
+# create_waf_policy
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC_BY--NC--ND_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+Deploy a WAF-enabled app gateway along with a 'web_application_firewall_policy' resource
 
-## Overview
-
-This terraform module provisions an Azure Application Gateway with all its dependencies. It supports the SKUs `Standard_V2` and
-`WAF_V2`. At the time of creating this module, its possible to provision either Public only or both Private and public
-Application Gateway instance. The Private only is currently in Preview and is not supported by this module. The only input to this module is the
-subnet in which the Application Gateway should be deployed.
-
-This reference module is built as a wrapper around the primitive module [tf-azurerm-module_primitive-application_gateway](https://github.com/launchbynttdata/tf-azurerm-module_primitive-application_gateway)
-
-It provisions the following resources:
-- Resource Group
-- Application Gateway
-- WAF (optional)
-- Public IP
-- Custom Domain Name
-- TLS Certificates for listeners
-- User Assigned Managed Identity (MSI)
-- Role Assignment for MSI to access services like KeyVault
-
-## Pre-Commit hooks
-
-[.pre-commit-config.yaml](.pre-commit-config.yaml) file defines certain `pre-commit` hooks that are relevant to terraform, golang and common linting tasks. There are no custom hooks added.
-
-`commitlint` hook enforces commit message in certain format. The commit contains the following structural elements, to communicate intent to the consumers of your commit messages:
-
-- **fix**: a commit of the type `fix` patches a bug in your codebase (this correlates with PATCH in Semantic Versioning).
-- **feat**: a commit of the type `feat` introduces a new feature to the codebase (this correlates with MINOR in Semantic Versioning).
-- **BREAKING CHANGE**: a commit that has a footer `BREAKING CHANGE:`, or appends a `!` after the type/scope, introduces a breaking API change (correlating with MAJOR in Semantic Versioning). A BREAKING CHANGE can be part of commits of any type.
-footers other than BREAKING CHANGE: <description> may be provided and follow a convention similar to git trailer format.
-- **build**: a commit of the type `build` adds changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-- **chore**: a commit of the type `chore` adds changes that don't modify src or test files
-- **ci**: a commit of the type `ci` adds changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
-- **docs**: a commit of the type `docs` adds documentation only changes
-- **perf**: a commit of the type `perf` adds code change that improves performance
-- **refactor**: a commit of the type `refactor` adds code change that neither fixes a bug nor adds a feature
-- **revert**: a commit of the type `revert` reverts a previous commit
-- **style**: a commit of the type `style` adds code changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-- **test**: a commit of the type `test` adds missing tests or correcting existing tests
-
-Base configuration used for this project is [commitlint-config-conventional (based on the Angular convention)](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional#type-enum)
-
-If you are a developer using vscode, [this](https://marketplace.visualstudio.com/items?itemName=joshbolduc.commitlint) plugin may be helpful.
-
-`detect-secrets-hook` prevents new secrets from being introduced into the baseline. TODO: INSERT DOC LINK ABOUT HOOKS
-
-In order for `pre-commit` hooks to work properly
-
-- You need to have the pre-commit package manager installed. [Here](https://pre-commit.com/#install) are the installation instructions.
-- `pre-commit` would install all the hooks when commit message is added by default except for `commitlint` hook. `commitlint` hook would need to be installed manually using the command below
-
-```
-pre-commit install --hook-type commit-msg
-```
-
-## To test the resource group module locally
-
-1. For development/enhancements to this module locally, you'll need to install all of its components. This is controlled by the `configure` target in the project's [`Makefile`](./Makefile). Before you can run `configure`, familiarize yourself with the variables in the `Makefile` and ensure they're pointing to the right places.
-
-```
-make configure
-```
-
-This adds in several files and directories that are ignored by `git`. They expose many new Make targets.
-
-2. _THIS STEP APPLIES ONLY TO MICROSOFT AZURE. IF YOU ARE USING A DIFFERENT PLATFORM PLEASE SKIP THIS STEP._ The first target you care about is `env`. This is the common interface for setting up environment variables. The values of the environment variables will be used to authenticate with cloud provider from local development workstation.
-
-`make configure` command will bring down `azure_env.sh` file on local workstation. Devloper would need to modify this file, replace the environment variable values with relevant values.
-
-These environment variables are used by `terratest` integration suit.
-
-Service principle used for authentication(value of ARM_CLIENT_ID) should have below privileges on resource group within the subscription.
-
-```
-"Microsoft.Resources/subscriptions/resourceGroups/write"
-"Microsoft.Resources/subscriptions/resourceGroups/read"
-"Microsoft.Resources/subscriptions/resourceGroups/delete"
-```
-
-Then run this make target to set the environment variables on developer workstation.
-
-```
-make env
-```
-
-3. The first target you care about is `check`.
-
-**Pre-requisites**
-Before running this target it is important to ensure that, developer has created files mentioned below on local workstation under root directory of git repository that contains code for primitives/segments. Note that these files are `azure` specific. If primitive/segment under development uses any other cloud provider than azure, this section may not be relevant.
-
-- A file named `provider.tf` with contents below
-
-```
-provider "azurerm" {
-  features {}
-}
-```
-
-- A file named `terraform.tfvars` which contains key value pair of variables used.
-
-Note that since these files are added in `gitignore` they would not be checked in into primitive/segment's git repo.
-
-After creating these files, for running tests associated with the primitive/segment, run
-
-```
-make check
-```
-
-If `make check` target is successful, developer is good to commit the code to primitive/segment's git repo.
-
-`make check` target
-
-- runs `terraform commands` to `lint`,`validate` and `plan` terraform code.
-- runs `conftests`. `conftests` make sure `policy` checks are successful.
-- runs `terratest`. This is integration test suit.
-- runs `opa` tests
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -135,14 +19,9 @@ No providers.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 1.0 |
-| <a name="module_resource_names_v2"></a> [resource\_names\_v2](#module\_resource\_names\_v2) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 2.0 |
-| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
-| <a name="module_public_ip"></a> [public\_ip](#module\_public\_ip) | terraform.registry.launch.nttdata.com/module_primitive/public_ip/azurerm | ~> 1.0 |
-| <a name="module_managed_identity"></a> [managed\_identity](#module\_managed\_identity) | terraform.registry.launch.nttdata.com/module_primitive/user_managed_identity/azurerm | ~> 1.0 |
-| <a name="module_identity_roles"></a> [identity\_roles](#module\_identity\_roles) | terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm | ~> 1.0 |
-| <a name="module_private_dns_record"></a> [private\_dns\_record](#module\_private\_dns\_record) | terraform.registry.launch.nttdata.com/module_primitive/private_dns_records/azurerm | ~> 1.0 |
-| <a name="module_waf_policy"></a> [waf\_policy](#module\_waf\_policy) | terraform.registry.launch.nttdata.com/module_primitive/web_application_firewall_policy/azurerm | ~> 1.0 |
-| <a name="module_application_gateway"></a> [application\_gateway](#module\_application\_gateway) | terraform.registry.launch.nttdata.com/module_primitive/application_gateway/azurerm | ~> 1.0 |
+| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.1 |
+| <a name="module_virtual_network"></a> [virtual\_network](#module\_virtual\_network) | terraform.registry.launch.nttdata.com/module_primitive/virtual_network/azurerm | ~> 3.0 |
+| <a name="module_application_gateway"></a> [application\_gateway](#module\_application\_gateway) | ../.. | n/a |
 
 ## Resources
 
@@ -153,12 +32,12 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_product_family"></a> [product\_family](#input\_product\_family) | (Required) Name of the product family for which the resource is created.<br>    Example: org\_name, department\_name. | `string` | `"dso"` | no |
-| <a name="input_product_service"></a> [product\_service](#input\_product\_service) | (Required) Name of the product service for which the resource is created.<br>    For example, backend, frontend, middleware etc. | `string` | `"app"` | no |
+| <a name="input_product_service"></a> [product\_service](#input\_product\_service) | (Required) Name of the product service for which the resource is created.<br>    For example, backend, frontend, middleware etc. | `string` | `"appgw"` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment in which the resource should be provisioned like dev, qa, prod etc. | `string` | `"dev"` | no |
 | <a name="input_environment_number"></a> [environment\_number](#input\_environment\_number) | The environment count for the respective environment. Defaults to 000. Increments in value of 1 | `string` | `"000"` | no |
 | <a name="input_resource_number"></a> [resource\_number](#input\_resource\_number) | The resource count for the respective resource. Defaults to 000. Increments in value of 1 | `string` | `"000"` | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS Region in which the infra needs to be provisioned | `string` | `"eastus"` | no |
-| <a name="input_resource_names_map"></a> [resource\_names\_map](#input\_resource\_names\_map) | A map of key to resource\_name that will be used by tf-launch-module\_library-resource\_name to generate resource names | <pre>map(object(<br>    {<br>      name       = string<br>      max_length = optional(number, 60)<br>    }<br>  ))</pre> | <pre>{<br>  "app_gateway": {<br>    "max_length": 60,<br>    "name": "appgw"<br>  },<br>  "msi": {<br>    "max_length": 60,<br>    "name": "msi"<br>  },<br>  "nsg": {<br>    "max_length": 60,<br>    "name": "nsg"<br>  },<br>  "public_ip": {<br>    "max_length": 60,<br>    "name": "pip"<br>  },<br>  "resource_group": {<br>    "max_length": 60,<br>    "name": "rg"<br>  },<br>  "waf_policy": {<br>    "max_length": 60,<br>    "name": "waf"<br>  }<br>}</pre> | no |
+| <a name="input_resource_names_map"></a> [resource\_names\_map](#input\_resource\_names\_map) | A map of key to resource\_name that will be used by tf-launch-module\_library-resource\_name to generate resource names | <pre>map(object(<br>    {<br>      name       = string<br>      max_length = optional(number, 60)<br>    }<br>  ))</pre> | <pre>{<br>  "app_gateway": {<br>    "max_length": 60,<br>    "name": "appgw"<br>  },<br>  "msi": {<br>    "max_length": 60,<br>    "name": "msi"<br>  },<br>  "nsg": {<br>    "max_length": 60,<br>    "name": "nsg"<br>  },<br>  "public_ip": {<br>    "max_length": 60,<br>    "name": "pip"<br>  },<br>  "resource_group": {<br>    "max_length": 60,<br>    "name": "rg"<br>  },<br>  "virtual_network": {<br>    "max_length": 60,<br>    "name": "vnet"<br>  },<br>  "waf_policy": {<br>    "max_length": 60,<br>    "name": "waf"<br>  }<br>}</pre> | no |
 | <a name="input_resource_names_version"></a> [resource\_names\_version](#input\_resource\_names\_version) | Major version of the resource names module to use | `string` | `"1"` | no |
 | <a name="input_frontend_ip_configuration_name"></a> [frontend\_ip\_configuration\_name](#input\_frontend\_ip\_configuration\_name) | Name of the frontend IP configuration. | `string` | `"standard-public-ip"` | no |
 | <a name="input_frontend_private_ip_configuration_name"></a> [frontend\_private\_ip\_configuration\_name](#input\_frontend\_private\_ip\_configuration\_name) | Name of the frontend private IP configuration. Mandatory when appgw\_private is set to true. | `string` | `"standard-private-ip"` | no |
@@ -190,8 +69,6 @@ No resources.
 | <a name="input_waf_policy_custom_rules"></a> [waf\_policy\_custom\_rules](#input\_waf\_policy\_custom\_rules) | Custom rules of the firewall policy. | <pre>list(object({<br>    name      = string<br>    priority  = number<br>    rule_type = string<br>    action    = string<br><br>    rate_limit_duration  = optional(string)<br>    rate_limit_threshold = optional(number)<br>    group_rate_limit_by  = optional(string)<br><br>    match_conditions = list(object({<br>      match_variables = list(object({<br>        variable_name = string<br>        selector      = optional(string)<br>      }))<br>      operator           = string<br>      negation_condition = optional(bool)<br>      match_values       = optional(list(string))<br>      transforms         = optional(list(string))<br>    }))<br>  }))</pre> | `null` | no |
 | <a name="input_waf_policy_settings"></a> [waf\_policy\_settings](#input\_waf\_policy\_settings) | Policy settings of the firewall policy. | <pre>object({<br>    enabled                                   = optional(bool)<br>    mode                                      = optional(string)<br>    request_body_check                        = optional(bool)<br>    file_upload_limit_in_mb                   = optional(number)<br>    max_request_body_size_in_kb               = optional(number)<br>    request_body_inspect_limit_in_kb          = optional(number)<br>    js_challenge_cookie_expiration_in_minutes = optional(number)<br>  })</pre> | <pre>{<br>  "enabled": null,<br>  "file_upload_limit_in_mb": null,<br>  "js_challenge_cookie_expiration_in_minutes": null,<br>  "max_request_body_size_in_kb": null,<br>  "mode": null,<br>  "request_body_check": null,<br>  "request_body_inspect_limit_in_kb": null<br>}</pre> | no |
 | <a name="input_waf_policy_managed_rules"></a> [waf\_policy\_managed\_rules](#input\_waf\_policy\_managed\_rules) | Managed rules of the firewall policy. | <pre>object({<br>    exclusions = optional(list(object({<br>      match_variable          = string<br>      selector                = string<br>      selector_match_operator = string<br>      excluded_rule_sets = list(object({<br>        type    = string<br>        version = string<br>        rule_groups = list(object({<br>          rule_group_name = string<br>          excluded_rules  = list(string)<br>        }))<br>      }))<br>    }))),<br>    managed_rule_sets = list(object({<br>      type    = string<br>      version = string<br>      rule_group_overrides = optional(list(object({<br>        rule_group_name = string<br>        rules = optional(list(object({<br>          id      = number<br>          enabled = optional(bool)<br>          action  = optional(string)<br>        })))<br>      })))<br>    }))<br>  })</pre> | <pre>{<br>  "managed_rule_sets": [<br>    {<br>      "type": "OWASP",<br>      "version": "3.2"<br>    }<br>  ]<br>}</pre> | no |
-| <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | Subnet ID for attaching the Application Gateway. This is mandatory for v2 SKUs | `string` | n/a | yes |
-| <a name="input_private_ip_address"></a> [private\_ip\_address](#input\_private\_ip\_address) | The private IP address of the Application Gateway. Must be within the range of the subnet. Required only when appgw\_private is set to true. | `string` | `""` | no |
 | <a name="input_user_assigned_identity_id"></a> [user\_assigned\_identity\_id](#input\_user\_assigned\_identity\_id) | User assigned identity id assigned to this resource. User can choose to pass in an existing identity or create a new one with create\_user\_managed\_identity. | `string` | `null` | no |
 | <a name="input_create_user_managed_identity"></a> [create\_user\_managed\_identity](#input\_create\_user\_managed\_identity) | Creates an user assigned managed Identity and assigns it to the Application Gateway. If this is true, user\_assigned\_identity\_id will be ignored. | `bool` | `true` | no |
 | <a name="input_appgw_private"></a> [appgw\_private](#input\_appgw\_private) | Boolean variable to create a private Application Gateway. When `true`, the default http listener will listen on private IP instead of the public IP. | `bool` | `false` | no |
@@ -207,7 +84,7 @@ No resources.
 |------|-------------|
 | <a name="output_id"></a> [id](#output\_id) | The ID of the Application Gateway. |
 | <a name="output_name"></a> [name](#output\_name) | The name of the Application Gateway. |
-| <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The name of the resource group |
+| <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The name of the application gateway resource group |
 | <a name="output_frontend_ip_configuration"></a> [frontend\_ip\_configuration](#output\_frontend\_ip\_configuration) | The frontend IP configuration of the Application Gateway. |
 | <a name="output_frontend_port"></a> [frontend\_port](#output\_frontend\_port) | The frontend port of the Application Gateway. |
 | <a name="output_backend_address_pool"></a> [backend\_address\_pool](#output\_backend\_address\_pool) | The backend address pool of the Application Gateway. |
