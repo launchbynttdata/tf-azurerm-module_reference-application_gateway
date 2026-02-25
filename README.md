@@ -143,6 +143,8 @@ No providers.
 | <a name="module_private_dns_record"></a> [private\_dns\_record](#module\_private\_dns\_record) | terraform.registry.launch.nttdata.com/module_primitive/private_dns_records/azurerm | ~> 1.0 |
 | <a name="module_waf_policy"></a> [waf\_policy](#module\_waf\_policy) | terraform.registry.launch.nttdata.com/module_primitive/web_application_firewall_policy/azurerm | ~> 1.0 |
 | <a name="module_application_gateway"></a> [application\_gateway](#module\_application\_gateway) | terraform.registry.launch.nttdata.com/module_primitive/application_gateway/azurerm | ~> 1.0 |
+| <a name="module_log_analytics_workspace"></a> [log\_analytics\_workspace](#module\_log\_analytics\_workspace) | terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm | ~> 1.0 |
+| <a name="module_diagnostic_setting"></a> [diagnostic\_setting](#module\_diagnostic\_setting) | terraform.registry.launch.nttdata.com/module_primitive/monitor_diagnostic_setting/azurerm | ~> 3.0 |
 
 ## Resources
 
@@ -200,6 +202,9 @@ No resources.
 | <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments) | A map of role assignments to be associated with the user assigned managed identity of the Application Gateway<br>    Should be of the format<br>    {<br>      private-dns = ["Private DNS Zone Contributor", "<private-dns-zone-id>"]<br>      key-vault = ["Key Vault Administrator", "<key-vault-id>"]<br>    } | `map(list(string))` | `{}` | no |
 | <a name="input_custom_private_dns_record"></a> [custom\_private\_dns\_record](#input\_custom\_private\_dns\_record) | Custom private DNS record for the Application Gateway. An A-record would be created for the private IP address.<br>    Valid `private_dns_zone_name` and `private_dns_zone_rg` must be provided. `name` must be only the sub-domain without the zone name. | <pre>object({<br>    name                  = string<br>    ttl                   = optional(number, 300)<br>    private_dns_zone_name = string<br>    private_dns_zone_rg   = string<br>  })</pre> | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
+| <a name="input_diagnostic_settings"></a> [diagnostic\_settings](#input\_diagnostic\_settings) | n/a | <pre>map(object({<br>    enabled_log = optional(list(object({<br>      category_group = optional(string, "allLogs")<br>      category       = optional(string, null)<br>    })))<br>    metrics = optional(list(object({<br>      category = string<br>      enabled  = optional(bool)<br>    })))<br>  }))</pre> | `{}` | no |
+| <a name="input_log_analytics_workspace"></a> [log\_analytics\_workspace](#input\_log\_analytics\_workspace) | n/a | <pre>object({<br>    sku               = string<br>    retention_in_days = number<br>    daily_quota_gb    = number<br>    identity = optional(object({<br>      type         = string<br>      identity_ids = optional(list(string))<br>    }))<br>    local_authentication_disabled = optional(bool)<br>  })</pre> | `null` | no |
+| <a name="input_log_analytics_workspace_id"></a> [log\_analytics\_workspace\_id](#input\_log\_analytics\_workspace\_id) | (Optional) The ID of the Log Analytics Workspace. | `string` | `null` | no |
 
 ## Outputs
 

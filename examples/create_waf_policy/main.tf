@@ -112,10 +112,12 @@ module "application_gateway" {
   role_assignments             = var.role_assignments
   custom_private_dns_record    = var.custom_private_dns_record
 
-  create_waf_policy        = var.create_waf_policy
-  waf_policy_custom_rules  = var.waf_policy_custom_rules
-  waf_policy_settings      = var.waf_policy_settings
-  waf_policy_managed_rules = var.waf_policy_managed_rules
-
-  tags = var.tags
+  create_waf_policy          = var.create_waf_policy
+  waf_policy_custom_rules    = var.waf_policy_custom_rules
+  waf_policy_settings        = var.waf_policy_settings
+  waf_policy_managed_rules   = var.waf_policy_managed_rules
+  log_analytics_workspace    = var.log_analytics_workspace
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+  diagnostic_settings        = var.diagnostic_settings
+  tags                       = var.tags
 }

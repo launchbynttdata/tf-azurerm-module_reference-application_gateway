@@ -177,3 +177,25 @@ tags = {
   environment = "dev"
   owner       = "example"
 }
+
+log_analytics_workspace = {
+  sku               = "PerGB2018"
+  retention_in_days = 30
+  daily_quota_gb    = 1
+}
+
+diagnostic_settings = {
+  "appgw-diag" = {
+    enabled_log = [
+      {
+        category_group = "allLogs"
+      }
+    ]
+    metrics = [
+      {
+        category = "AllMetrics"
+        enabled  = true
+      }
+    ]
+  }
+}

@@ -676,3 +676,36 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "diagnostic_settings" {
+  type = map(object({
+    enabled_log = optional(list(object({
+      category_group = optional(string, "allLogs")
+      category       = optional(string, null)
+    })))
+    metrics = optional(list(object({
+      category = string
+      enabled  = optional(bool)
+    })))
+  }))
+  default = {}
+}
+
+variable "log_analytics_workspace" {
+  type = object({
+    sku               = string
+    retention_in_days = number
+    daily_quota_gb    = number
+    identity = optional(object({
+      type         = string
+      identity_ids = optional(list(string))
+    }))
+    local_authentication_disabled = optional(bool)
+  })
+  default = null
+}
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "(Optional) The ID of the Log Analytics Workspace."
+  default     = null
+}

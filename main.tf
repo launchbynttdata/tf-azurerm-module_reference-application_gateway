@@ -184,3 +184,55 @@ module "application_gateway" {
 
   depends_on = [module.resource_group, module.public_ip, module.managed_identity, module.identity_roles]
 }
+
+module "log_analytics_workspace" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/log_analytics_workspace/azurerm"
+  version = "~> 1.0"
+
+  count = var.log_analytics_workspace != null ? 1 : 0
+
+  name                = local.log_analytics_workspace_name
+  location            = var.region
+  resource_group_name = module.resource_group.name
+
+  sku               = var.log_analytics_workspace.sku
+  retention_in_days = var.log_analytics_workspace.retention_in_days
+  daily_quota_gb    = var.log_analytics_workspace.daily_quota_gb
+
+  identity = try(var.log_analytics_workspace.identity, null)
+
+  local_authentication_disabled = try(
+    var.log_analytics_workspace.local_authentication_disabled,
+    null
+  )
+
+  tags = merge(var.tags, {
+    resource_name = local.log_analytics_workspace_name
+  })
+
+  depends_on = [module.resource_group]
+}
+
+module "diagnostic_setting" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/monitor_diagnostic_setting/azurerm"
+  version = "~> 3.0"
+
+  for_each = var.diagnostic_settings
+
+  name               = each.key
+  target_resource_id = module.application_gateway.id
+
+  log_analytics_workspace_id = coalesce(
+    try(module.log_analytics_workspace[0].id, null),
+    var.log_analytics_workspace_id
+  )
+
+  enabled_log = try(each.value.enabled_log, [])
+  metrics     = try(each.value.metrics, [])
+
+  depends_on = [
+    module.resource_group,
+    module.application_gateway,
+    module.log_analytics_workspace
+  ]
+}
